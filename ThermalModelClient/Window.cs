@@ -56,6 +56,15 @@ namespace ThermalModelClient
         private void UpdateChoosenCombobox
             (IEnumerable<IdClass> objects, ComboBox comboBox)
         {
+            foreach (var item in comboBox.Items.Cast<IdClass>().ToList())
+            {
+                var obj = objects.FirstOrDefault(o => o.Id == item.Id);
+                if(obj == null)
+                {
+                    comboBox.Items.Remove(item);
+                }
+            }
+
             var copyOfChoosenObjItems = comboBox.Items.Cast<IdClass>().ToList();
 
             foreach (var obj in objects)
@@ -87,6 +96,15 @@ namespace ThermalModelClient
 
         private void UpdateDataGrid(IEnumerable<Sensor> sensors)
         {
+            foreach (var item in sensorsList.ToList())
+            {
+                var obj = sensors.FirstOrDefault(o => o.Id == item.Id);
+                if (obj == null)
+                {
+                    sensorsList.Remove(item);
+                }
+            }
+
             var copyOfSensorsList = sensorsList.ToList();
 
             foreach (var obj in sensors)

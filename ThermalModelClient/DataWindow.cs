@@ -23,10 +23,13 @@ namespace ThermalModelClient
         {
             LoadAllFields();
             var data = ConnectionLayer.GetData(sensor);
+            
 
             if (data == null) return;
 
-            foreach(var value in data)
+            data = data.OrderByDescending(d => d.CheckDate);
+
+            foreach (var value in data)
             {
                 dataList.Add(value);
             }
