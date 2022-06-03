@@ -38,6 +38,7 @@
             this.BlockName = new System.Windows.Forms.TextBox();
             this.SensorsLabel = new System.Windows.Forms.Label();
             this.SensorsGrid = new System.Windows.Forms.DataGridView();
+            this.History = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.SensorsGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -58,7 +59,6 @@
             this.ChoosenClusterLabel.Size = new System.Drawing.Size(85, 15);
             this.ChoosenClusterLabel.TabIndex = 1;
             this.ChoosenClusterLabel.Text = "Choose cluster";
-            this.ChoosenClusterLabel.Click += new System.EventHandler(this.ChoosenClusterLabel_Click);
             // 
             // ChoosenBlock
             // 
@@ -77,7 +77,6 @@
             this.ChoosenBlockLabel.Size = new System.Drawing.Size(79, 15);
             this.ChoosenBlockLabel.TabIndex = 1;
             this.ChoosenBlockLabel.Text = "Choose block";
-            this.ChoosenBlockLabel.Click += new System.EventHandler(this.ChoosenBlockLabel_Click);
             // 
             // ClusterName
             // 
@@ -95,7 +94,6 @@
             this.ClusterNameLabel.Size = new System.Drawing.Size(80, 15);
             this.ClusterNameLabel.TabIndex = 1;
             this.ClusterNameLabel.Text = "Cluster name:";
-            this.ClusterNameLabel.Click += new System.EventHandler(this.ChoosenClusterLabel_Click);
             // 
             // BlockNameLabel
             // 
@@ -105,7 +103,6 @@
             this.BlockNameLabel.Size = new System.Drawing.Size(72, 15);
             this.BlockNameLabel.TabIndex = 1;
             this.BlockNameLabel.Text = "Block name:";
-            this.BlockNameLabel.Click += new System.EventHandler(this.ChoosenClusterLabel_Click);
             // 
             // BlockName
             // 
@@ -126,18 +123,36 @@
             // 
             // SensorsGrid
             // 
+            this.SensorsGrid.AllowUserToAddRows = false;
+            this.SensorsGrid.AllowUserToDeleteRows = false;
+            this.SensorsGrid.AllowUserToResizeColumns = false;
+            this.SensorsGrid.AllowUserToResizeRows = false;
             this.SensorsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.SensorsGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.History});
             this.SensorsGrid.Location = new System.Drawing.Point(12, 141);
+            this.SensorsGrid.MultiSelect = false;
             this.SensorsGrid.Name = "SensorsGrid";
             this.SensorsGrid.RowTemplate.Height = 25;
-            this.SensorsGrid.Size = new System.Drawing.Size(776, 297);
+            this.SensorsGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.SensorsGrid.Size = new System.Drawing.Size(1038, 297);
             this.SensorsGrid.TabIndex = 4;
+            this.SensorsGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.SensorsGrid_CellContentClick);
+            this.SensorsGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellEndEdit);
+            // 
+            // History
+            // 
+            this.History.HeaderText = "History";
+            this.History.Name = "History";
+            this.History.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.History.Text = "open";
+            this.History.UseColumnTextForButtonValue = true;
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1062, 450);
             this.Controls.Add(this.SensorsGrid);
             this.Controls.Add(this.SensorsLabel);
             this.Controls.Add(this.BlockName);
@@ -169,5 +184,6 @@
         private TextBox BlockName;
         private Label SensorsLabel;
         private DataGridView SensorsGrid;
+        private DataGridViewButtonColumn History;
     }
 }

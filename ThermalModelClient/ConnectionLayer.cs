@@ -15,6 +15,12 @@ namespace ThermalModelClient
             return request.Get();
         }
 
+        public static IEnumerable<Data>? GetData(Sensor sensor)
+        {
+            var request = new Request();
+            return request.GetData(sensor);
+        }
+
         public static void Post<T>(T value)
         {
             var request = new Request();

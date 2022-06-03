@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ThermalModelClient.Model
 {
-    internal class IdClass
+    public class IdClass
     {
         public Guid Id { get; set; }
     }

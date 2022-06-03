@@ -1,9 +1,15 @@
+using System.ComponentModel;
 using ThermalModelClient.Model;
 
 namespace ThermalModelClient
 {
     public partial class Window : Form
     {
+        public BindingSource SensorsSource;
+
+        private BindingList<Sensor> sensorsList 
+            = new BindingList<Sensor>();
+
         /// <summary>
         /// Number of columns in the grid.
         /// </summary>
@@ -17,7 +23,10 @@ namespace ThermalModelClient
         private async void Window_Load(object sender, EventArgs e)
         {
             await UpdateWindowInfo();
-            while(true)
+            SensorsSource = new BindingSource(sensorsList, null);
+            SensorsGrid.DataSource = SensorsSource;
+
+            while (true)
             {
                 await Task.Delay(1000);
                 await UpdateWindowInfo();
@@ -40,18 +49,20 @@ namespace ThermalModelClient
             if (choosencluster.Blocks == null) return;
 
             UpdateChoosenCombobox(choosencluster.Blocks, ChoosenBlock);
+
+            UpdateSensorsGrid();
         }
 
         private void UpdateChoosenCombobox
             (IEnumerable<IdClass> objects, ComboBox comboBox)
         {
-            var copyOfChoosenClusterItems = comboBox.Items.Cast<IdClass>().ToList();
+            var copyOfChoosenObjItems = comboBox.Items.Cast<IdClass>().ToList();
 
             foreach (var obj in objects)
             {
                 bool updated = false;
                 for (int objNumber = 0;
-                    objNumber < copyOfChoosenClusterItems.Count();
+                    objNumber < copyOfChoosenObjItems.Count();
                     objNumber++)
                 {
                     var clusterInChoosen = (IdClass?)comboBox.Items[objNumber];
@@ -70,6 +81,37 @@ namespace ThermalModelClient
                 if (!updated)
                 {
                     comboBox.Items.Add(obj);
+                }
+            }
+        }
+
+        private void UpdateDataGrid(IEnumerable<Sensor> sensors)
+        {
+            var copyOfSensorsList = sensorsList.ToList();
+
+            foreach (var obj in sensors)
+            {
+                bool updated = false;
+                for (int objNumber = 0;
+                    objNumber < copyOfSensorsList.Count;
+                    objNumber++)
+                {
+                    var clusterInChoosen = (IdClass?)sensorsList[objNumber];
+
+                    if (clusterInChoosen == null)
+                        throw new ArgumentNullException($"{obj.GetType().Name} in choosen can't be null!");
+
+                    if (obj.Id == clusterInChoosen.Id)
+                    {
+                        sensorsList[objNumber] = obj;
+                        updated = true;
+                        break;
+                    }
+                }
+
+                if (!updated)
+                {
+                    sensorsList.Add(obj);
                 }
             }
         }
@@ -97,19 +139,22 @@ namespace ThermalModelClient
 
             if (block.Name != null)
                 BlockName.Text = block.Name;
+
+            UpdateSensorsGrid();
         }
 
-        private void UpdateSensorGrid(IEnumerable<Sensor> sensors)
+        private void UpdateSensorsGrid()
         {
-            SensorsGrid.Rows.Clear();
+            if (SensorsGrid.Focused) return;
+            if (SensorsGrid.ContainsFocus) return;
 
-            int height = sensors.Count();
-            int width = numberOfColumns;
+            var block = (Block?)ChoosenBlock.SelectedItem;
 
-            int rowHeight = (SensorsGrid.Size.Height - 40) / (height - 1);
-            int columnWidth = (SensorsGrid.Size.Width - 45) / (width - 1);
+            if (block == null) return;
+            if (block.Sensors == null) return;
+            var sensors = block.Sensors.ToArray();
 
-
+            UpdateDataGrid(sensors);
         }
 
         private void ClusterName_LostFocus(object sender, EventArgs e)
@@ -134,20 +179,20 @@ namespace ThermalModelClient
             Saver.Save(block);
         }
 
-        private void ChoosenBlockLabel_Click(object sender, EventArgs e)
+        private void DataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-
+            var sensor = sensorsList[e.RowIndex];
+            Saver.Save(sensor);
         }
 
-        
-
-        private void ChoosenClusterLabel_Click(object sender, EventArgs e)
+        private void SensorsGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.ColumnIndex != 0) return;
 
+            var sensor = sensorsList[e.RowIndex];
+
+            var dataWindow = new DataWindow(sensor);
+            dataWindow.ShowDialog();
         }
-
-        
-
-        
     }
 }

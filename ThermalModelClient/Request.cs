@@ -30,11 +30,13 @@ namespace ThermalModelClient
             return clusters;
         }
 
-        public IEnumerable<DataWindow>? GetData(Sensor sensor)
+        public IEnumerable<Data>? GetData(Sensor sensor)
         {
+
             using var client = new HttpClient();
-            return (IEnumerable<DataWindow>?)client.GetFromJsonAsync
-                ($"{url}/data/{sensor.Id}", typeof(IEnumerable<DataWindow>)).Result;
+            var requestUrl = $"{url}/data/{sensor.Id}";
+            return (IEnumerable<Data>?)client.GetFromJsonAsync
+                (requestUrl, typeof(IEnumerable<Data>)).Result;
         }
 
         public void Post<T>(T value)
